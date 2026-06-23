@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Healthcare Portal</string>
+    <string name="book_appointment">Book Appointment</string>
+    <string name="track_appointment">Track Appointment</string>
+    <string name="my_appointments">My Appointments</string>
+    <string name="select_department">Select Specialty</string>
+    <string name="choose_doctor">Choose Doctor</string>
+    <string name="your_information">Your Information</string>
+    <string name="payment">Payment</string>
+    <string name="confirmed">Appointment Confirmed</string>
+    <string name="evc_instructions">Enter your EVC Plus phone number. A payment prompt will be sent to your phone. Enter your EVC password to confirm payment.</string>
+</resources>
