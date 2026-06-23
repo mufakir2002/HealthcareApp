@@ -25,18 +25,37 @@ jobs:
       - name: Accept SDK licenses
         run: yes | sdkmanager --licenses > /dev/null 2>&1 || true
 
-      - name: Show structure
-        run: find . -name "build.gradle" | head -20
+      - name: Find project root and build
+        run: |
+          echo "=== Repo structure ==="
+          find . -name "build.gradle" -not -path "*/build/*"
+          find . -name "gradlew" 2>/dev/null
+          echo "=== Finding and building ==="
+          GRADLEW=$(find . -name "gradlew" | head -1)
+          if [ -z "$GRADLEW" ]; then
+            echo "gradlew not found — creating it"
+            PROJ_DIR=$(dirname $(find . -name "settings.gradle" | head -1))
+            cd $PROJ_DIR
+            wget -q https://services.gradle.org/distributions/gradle-8.4-bin.zip
+            unzip -q gradle-8.4-bin.zip
+            ./gradle-8.4/bin/gradle wrapper --gradle-version 8.4
+          else
+            PROJ_DIR=$(dirname $GRADLEW)
+            cd $PROJ_DIR
+          fi
+          echo "Building in: $(pwd)"
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
 
-      - name: Make gradlew executable
-        run: chmod +x gradlew
-
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug --no-daemon
+      - name: Find and upload APK
+        run: |
+          APK=$(find . -name "app-debug.apk" | head -1)
+          echo "APK found at: $APK"
+          cp "$APK" ./app-debug.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: healthcare-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: ./app-debug.apk
           retention-days: 7
