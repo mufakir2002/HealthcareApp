@@ -25,16 +25,18 @@ jobs:
       - name: Accept SDK licenses
         run: yes | sdkmanager --licenses > /dev/null 2>&1 || true
 
+      - name: Show structure
+        run: find . -name "build.gradle" | head -20
+
       - name: Make gradlew executable
-        run: chmod +x HealthcareApp/gradlew
+        run: chmod +x gradlew
 
       - name: Build Debug APK
-        working-directory: HealthcareApp
         run: ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: healthcare-debug-apk
-          path: HealthcareApp/app/build/outputs/apk/debug/app-debug.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
           retention-days: 7
